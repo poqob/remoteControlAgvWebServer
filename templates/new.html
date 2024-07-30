@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUMANDA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .buttons,
+        .sliders {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .slider {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .slider input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="padding-left: 10px;"><img src="https://github.com/fecteknofest/source/blob/main/logo.png?raw=true"
+                alt="Logo" style="width: 100%; max-width: 20px;">
+            KUMANDA</h1>
+        <div class="input-group">
+            <label for="ip">IP Adresi:</label>
+            <input type="text" id="ip" placeholder="IP Adresi">
+        </div>
+        <div class="input-group">
+            <label for="port">Port:</label>
+            <input type="text" id="port" placeholder="Port">
+        </div>
+        <div class="buttons">
+            <button id="button1">ikaz 0</button>
+            <button id="button2">ikaz 1</button>
+        </div>
+        <div class="sliders">
+            <div class="slider">
+                <label for="slider0">Slider 0:</label>
+                <input type="range" id="slider0" min="0" max="255" step="1">
+            </div>
+            <div class="slider">
+                <label for="slider1">Slider 1:</label>
+                <input type="range" id="slider1" min="0" max="255" step="1">
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="button3">lineer 0</button>
+            <button id="button4">lineer 1</button>
+        </div>
+    </div>
+
+    <script>
+        const button1 = document.getElementById('button1');
+        const button2 = document.getElementById('button2');
+        const button3 = document.getElementById('button3');
+        const button4 = document.getElementById('button4');
+        const slider0 = document.getElementById('slider0');
+        const slider1 = document.getElementById('slider1');
+        const ipInput = document.getElementById('ip');
+        const portInput = document.getElementById('port');
+
+        function sendData(data) {
+            const ip = ipInput.value;
+            const port = portInput.value;
+            const url = `http://${ip}:${port}`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Connection': 'close',
+                    'Content-Type': 'text/plain'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        button1.addEventListener('click', () => {
+            const data = { "u": "wn", "v": 0 };
+            sendData(data);
+        });
+
+        button2.addEventListener('click', () => {
+            const data = { "u": "wn", "v": 1 };
+            sendData(data);
+        });
+
+        button3.addEventListener('click', () => {
+            const data = { "u": "ln", "v": 0 };
+            sendData(data);
+        });
+
+        button4.addEventListener('click', () => {
+            const data = { "u": "ln", "v": 255 };
+            sendData(data);
+        });
+
+        slider0.addEventListener('input', () => {
+            const data = { "u": "a0", "v": parseInt(slider0.value) };
+            sendData(data);
+        });
+
+        slider1.addEventListener('input', () => {
+            const data = { "u": "a1", "v": parseInt(slider1.value) };
+            sendData(data);
+        });
+    </script>
+</body>
+
+</html>
